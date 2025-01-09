@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.4">
+    <title>Cronograma</title>
+</head>
+<body>
+    <style>
+        /* Estilos para as abas */
+.logo{
+    margin: -52px 10px 20px 20px;
+    width: 35%;
+}
+.cabecalho{
+    display: grid;
+    justify-items: center;
+}
+.sair{
+    margin: 0px 700px 0px 0px;
+    width: 9%;
+}
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    border-radius: 10px;
+    padding: 7px 5px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #f4f4f4;
+}
+
+.tab-button:hover {
+    background-color: #ddd;
+}
+
+.tab-button.active {
+    background-color: #bbb;
+}
+
+/* Estilos para o conteúdo das abas */
+.tab-content {
+    display: flex;
+    justify-content: center;
+}
+
+.tab-pane {
+    display: none;
+    text-align: center;
+    width: 100%;
+}
+
+.tab-pane.active {
+    display: grid;
+    justify-content: space-around;
+    justify-items: center;
+}
+    </style>
+    <script>
+    // Função para mostrar o conteúdo da aba selecionada
+function showTab(index) {
+    // Esconde todas as abas
+    const panes = document.querySelectorAll('.tab-pane');
+    panes.forEach(pane => pane.classList.remove('active'));
+
+    // Remove a classe 'active' de todos os botões
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(button => button.classList.remove('active'));
+
+    // Exibe o conteúdo da aba selecionada
+    document.getElementById(`tab${index + 1}`).classList.add('active');
+    buttons[index].classList.add('active');
+}
+
+// Exibe a primeira aba ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    showTab(0);
+});
+    </script>
+    <a href="https://infinitycooperative.github.io/Poseidon/"><img src="imagens/loguin.webp" alt="sair" class="sair"></a>
+    <div class="cabecalho">
+        <img src="imagens/Poseidon pt.webp" alt="logo" class="logo">
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane" id="tab1">
+            <h2>Cronograma</h2>
+            <!--tabela-->
+            <style>
+                body {
+                    display: grid;
+                    justify-items: center;
+                    font-family: Arial, sans-serif;
+                    background-image: url(imagens/agua.webp);
+                }
+                
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                
+                th, td {
+                    background-color: white;
+                    border: 1px solid #ddd;
+                }
+                
+                th {
+                    padding: 10px 39px;
+                    background-color: #f2f2f2;
+                    text-align: left;
+                }
+                
+                button {
+                    margin-top: 10px;
+                }
+                
+            </style>
+            <script>
+                function adicionarCliente() {
+                    const tabela = document.getElementById("clientesTable").getElementsByTagName('tbody')[0];
+                    const novaLinha = tabela.insertRow();
+                
+                    const celulaCliente = novaLinha.insertCell(0);
+                    const celulaFinalizado = novaLinha.insertCell(1);
+                    const celulaAnotacoes = novaLinha.insertCell(2);
+                    const celulaUpload = novaLinha.insertCell(3);
+                    const celulaAcao = novaLinha.insertCell(4);
+                
+                    celulaCliente.innerHTML = '<input type="text" placeholder="Nome do Cliente">';
+                    celulaFinalizado.innerHTML = '<input type="checkbox">';
+                    celulaAnotacoes.innerHTML = '<input type="text" placeholder="Anotações">';
+                    celulaUpload.innerHTML = '<input type="file">';
+                    celulaAcao.innerHTML = '<button onclick="removerCliente(this)">Remover</button>';
+                }
+                
+                function removerCliente(botao) {
+                    const linha = botao.parentNode.parentNode;
+                    linha.parentNode.removeChild(linha);
+                }
+                
+                function salvarClientes() {
+                    const tabela = document.getElementById("clientesTable").getElementsByTagName('tbody')[0];
+                    const linhas = tabela.getElementsByTagName('tr');
+                    const dados = [];
+                
+                    for (let i = 0; i < linhas.length; i++) {
+                        const cells = linhas[i].getElementsByTagName('td');
+                        const cliente = cells[0].getElementsByTagName('input')[0].value;
+                        const finalizado = cells[1].getElementsByTagName('input')[0].checked;
+                        const anotacoes = cells[2].getElementsByTagName('input')[0].value;
+                        const imagem = cells[3].getElementsByTagName('input')[0].files[0];
+                
+                        dados.push({
+                            cliente,
+                            finalizado,
+                            anotacoes,
+                            imagem: imagem ? imagem.name : ''
+                        });
+                    }
+                
+                    localStorage.setItem('clientes', JSON.stringify(dados));
+                    window.location.href = 'postagem.html';
+                }
+                
+            </script>
+            <h1>Gerenciamento de Clientes</h1>
+            <table id="clientesTable">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Finalizado</th>
+                        <th>Anotações</th>
+                        <th>Upload de Imagem</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button onclick="adicionarCliente()">Adicionar Cliente</button>
+            <button onclick="salvarClientes()">Salvar</button>
+            <!--tabela-->
+        </div>
+        
+</body>
+</html>
