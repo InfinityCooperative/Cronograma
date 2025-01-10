@@ -10,17 +10,33 @@
         <link rel="icon" href="imagens/1736106661099.png" sizes="48x48" type="image/png" />
         <link rel="apple-touch-icon" href="imagens/1736106661099.png">
     <style>
-        table {
+        body {
+    display: grid;
+    background-image: url(imagens/agua.webp);
+    justify-items: center;
+    justify-content: center;
+}
+
+form#clienteForm {
+    margin: 40px;
+}
+button#salvarButton {
+    height: 31px;
+    margin: 30px;
+    width: 60px;
+}
+table {
             width: 100%;
             border-collapse: collapse;
-        }
-        table, th, td {
+}
+table, th, td {
             border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
+}
+th, td {
+    background-color: white;
+    padding: 8px;
+    text-align: left;
+}
     </style>
 </head>
 <body>
