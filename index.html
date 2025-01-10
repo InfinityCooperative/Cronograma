@@ -2,189 +2,110 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.4">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cronograma</title>
+    <link rel="icon" href="imagens/1736106661099.png" type="image/x-icon">
+        <link rel="icon" href="imagens/1736106661099.png" sizes="16x16" />
+        <link rel="icon" href="imagens/1736106661099.png" sizes="32x32" type="image/png" />
+        <link rel="icon" href="imagens/1736106661099.png" sizes="48x48" type="image/png" />
+        <link rel="apple-touch-icon" href="imagens/1736106661099.png">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <style>
-        /* Estilos para as abas */
-.logo{
-    margin: -52px 10px 20px 20px;
-    width: 35%;
-}
-.cabecalho{
-    display: grid;
-    justify-items: center;
-}
-.sair{
-    margin: 0px 700px 0px 0px;
-    width: 9%;
-}
-.tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
+    <h1>Cadastro de Clientes</h1>
+    
+    <!-- Formulário para adicionar clientes -->
+    <form id="clienteForm">
+        <label for="nome">Nome do Cliente:</label>
+        <input type="text" id="nome" name="nome" required>
+        <label for="observacoes">Observações:</label>
+        <input type="text" id="observacoes" name="observacoes" required>
+        <label for="finalizacao">Finalização:</label>
+        <input type="checkbox" id="finalizacao" name="finalizacao">
+        <button type="submit">Adicionar Cliente</button>
+    </form>
 
-.tab-button {
-    border-radius: 10px;
-    padding: 7px 5px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    background-color: #f4f4f4;
-}
+    <!-- Tabela para exibir clientes -->
+    <table id="clientesTable">
+        <thead>
+            <tr>
+                <th>Nome do Cliente</th>
+                <th>Finalização</th>
+                <th>Observações</th>
+                <th>Hora</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 
-.tab-button:hover {
-    background-color: #ddd;
-}
+    <button id="salvarButton">Salvar</button>
 
-.tab-button.active {
-    background-color: #bbb;
-}
-
-/* Estilos para o conteúdo das abas */
-.tab-content {
-    display: flex;
-    justify-content: center;
-}
-
-.tab-pane {
-    display: none;
-    text-align: center;
-    width: 100%;
-}
-
-.tab-pane.active {
-    display: grid;
-    justify-content: space-around;
-    justify-items: center;
-}
-    </style>
     <script>
-    // Função para mostrar o conteúdo da aba selecionada
-function showTab(index) {
-    // Esconde todas as abas
-    const panes = document.querySelectorAll('.tab-pane');
-    panes.forEach(pane => pane.classList.remove('active'));
+        // Função para adicionar cliente à tabela
+        document.getElementById('clienteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let nome = document.getElementById('nome').value;
+            let observacoes = document.getElementById('observacoes').value;
+            let finalizacao = document.getElementById('finalizacao').checked;
+            let hora = new Date().toLocaleTimeString();
+            
+            if (nome && observacoes) {
+                let tableBody = document.getElementById('clientesTable').getElementsByTagName('tbody')[0];
+                let row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${finalizacao ? 'Sim' : 'Não'}</td>
+                    <td>${observacoes}</td>
+                    <td>${hora}</td>
+                    <td><button class="removeButton">Remover</button></td>
+                `;
+                
+                // Adicionar evento de remover
+                row.querySelector('.removeButton').addEventListener('click', function() {
+                    row.remove();
+                });
 
-    // Remove a classe 'active' de todos os botões
-    const buttons = document.querySelectorAll('.tab-button');
-    buttons.forEach(button => button.classList.remove('active'));
+                // Limpar os campos de input
+                document.getElementById('nome').value = '';
+                document.getElementById('observacoes').value = '';
+                document.getElementById('finalizacao').checked = false;
+            }
+        });
 
-    // Exibe o conteúdo da aba selecionada
-    document.getElementById(`tab${index + 1}`).classList.add('active');
-    buttons[index].classList.add('active');
-}
+        // Função para salvar dados e redirecionar para outra página
+        document.getElementById('salvarButton').addEventListener('click', function() {
+            let tableRows = document.querySelectorAll('#clientesTable tbody tr');
+            let clientes = [];
 
-// Exibe a primeira aba ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    showTab(0);
-});
+            tableRows.forEach(row => {
+                let nome = row.cells[0].textContent;
+                let finalizacao = row.cells[1].textContent === 'Sim';
+                let observacoes = row.cells[2].textContent;
+                let hora = row.cells[3].textContent;
+                clientes.push({ nome, finalizacao, observacoes, hora });
+            });
+
+            // Armazenar dados no localStorage com timestamp
+            let timestamp = new Date().getTime();
+            localStorage.setItem('clientes', JSON.stringify({ clientes, timestamp }));
+
+            // Redirecionar para a nova página de exibição
+            window.location.href = 'resultado.html';
+        });
     </script>
-    <a href="https://infinitycooperative.github.io/Poseidon/"><img src="imagens/loguin.webp" alt="sair" class="sair"></a>
-    <div class="cabecalho">
-        <img src="imagens/Poseidon pt.webp" alt="logo" class="logo">
-<style>
-        body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
-    input[type="text"], input[type="checkbox"] {
-      width: 100%;
-    }
-    button {
-      padding: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-  </style>
-
-
-  <h1>Gerenciar Clientes</h1>
-
-  <table id="clientesTable">
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Finalizado</th>
-        <th>Anotações</th>
-        <th>Horário</th>
-        <th>Ação</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Linhas de clientes serão adicionadas aqui -->
-    </tbody>
-  </table>
-
-  <button onclick="adicionarCliente()">Adicionar Cliente</button>
-  <br><br>
-  <button onclick="salvarDados()">Salvar e Verificar</button>
-
-  <script>
-    // Função para adicionar um novo cliente à tabela
-    function adicionarCliente() {
-      const table = document.getElementById('clientesTable').getElementsByTagName('tbody')[0];
-      const newRow = table.insertRow();
-      
-      const clienteCell = newRow.insertCell(0);
-      const checkboxCell = newRow.insertCell(1);
-      const anotacoesCell = newRow.insertCell(2);
-      const horarioCell = newRow.insertCell(3);
-      const actionCell = newRow.insertCell(4);
-
-      clienteCell.innerHTML = `<input type="text" placeholder="Nome do Cliente" />`;
-      checkboxCell.innerHTML = `<input type="checkbox" />`;
-      anotacoesCell.innerHTML = `<input type="text" placeholder="Anotações" />`;
-      horarioCell.innerHTML = `<input type="text" placeholder="HH:MM" />`;
-      actionCell.innerHTML = `<button onclick="removerCliente(this)">Remover</button>`;
-
-      // Atualizar o horário automaticamente
-      const horarioInput = horarioCell.getElementsByTagName('input')[0];
-      horarioInput.value = new Date().toLocaleTimeString();
-    }
-
-    // Função para remover um cliente da tabela
-    function removerCliente(button) {
-      const row = button.parentElement.parentElement;
-      row.remove();
-    }
-
-    // Função para salvar os dados e redirecionar para outra página
-    function salvarDados() {
-      const tableRows = document.getElementById('clientesTable').getElementsByTagName('tbody')[0].rows;
-      const clientesData = [];
-
-      for (let row of tableRows) {
-        const cliente = row.cells[0].getElementsByTagName('input')[0].value;
-        const finalizado = row.cells[1].getElementsByTagName('input')[0].checked;
-        const anotacoes = row.cells[2].getElementsByTagName('input')[0].value;
-        const horario = row.cells[3].getElementsByTagName('input')[0].value;
-
-        clientesData.push({ cliente, finalizado, anotacoes, horario });
-      }
-
-      // Armazenar os dados no localStorage
-      localStorage.setItem('clientesData', JSON.stringify(clientesData));
-
-      // Redirecionar para a página de exibição
-      window.location.href = 'https://infinitycooperative.github.io/Poseidon/';
-    }
-  </script>
-        
 </body>
 </html>
