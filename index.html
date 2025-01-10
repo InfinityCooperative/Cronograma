@@ -84,102 +84,107 @@ document.addEventListener('DOMContentLoaded', () => {
     <a href="https://infinitycooperative.github.io/Poseidon/"><img src="imagens/loguin.webp" alt="sair" class="sair"></a>
     <div class="cabecalho">
         <img src="imagens/Poseidon pt.webp" alt="logo" class="logo">
-    </div>
+body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    input[type="text"], input[type="checkbox"] {
+      width: 100%;
+    }
+    button {
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
 
-    <div class="tab-content">
-        <div class="tab-pane" id="tab1">
-            <h2>Cronograma</h2>
-            <!--tabela-->
-            <style>
-                body {
-                    display: grid;
-                    justify-items: center;
-                    font-family: Arial, sans-serif;
-                    background-image: url(imagens/agua.webp);
-                }
-                
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                
-                th, td {
-                    background-color: white;
-                    border: 1px solid #ddd;
-                }
-                
-                th {
-                    padding: 10px 39px;
-                    background-color: #f2f2f2;
-                    text-align: left;
-                }
-                
-                button {
-                    margin-top: 10px;
-                }
-                
-            </style>
-            <script>
-                function adicionarCliente() {
-                    const tabela = document.getElementById("clientesTable").getElementsByTagName('tbody')[0];
-                    const novaLinha = tabela.insertRow();
-                
-                    const celulaCliente = novaLinha.insertCell(0);
-                    const celulaFinalizado = novaLinha.insertCell(1);
-                    const celulaAnotacoes = novaLinha.insertCell(2);
-                    const celulaAcao = novaLinha.insertCell(3);
-                
-                    celulaCliente.innerHTML = '<input type="text" placeholder="Nome do Cliente">';
-                    celulaFinalizado.innerHTML = '<input type="checkbox">';
-                    celulaAnotacoes.innerHTML = '<input type="text" placeholder="Anotações">';
-                    celulaAcao.innerHTML = '<button onclick="removerCliente(this)">Remover</button>';
-                }
-                
-                function removerCliente(botao) {
-                    const linha = botao.parentNode.parentNode;
-                    linha.parentNode.removeChild(linha);
-                }
-                
-                function salvarClientes() {
-                    const tabela = document.getElementById("clientesTable").getElementsByTagName('tbody')[0];
-                    const linhas = tabela.getElementsByTagName('tr');
-                    const dados = [];
-                
-                    for (let i = 0; i < linhas.length; i++) {
-                        const cells = linhas[i].getElementsByTagName('td');
-                        const cliente = cells[0].getElementsByTagName('input')[0].value;
-                        const finalizado = cells[1].getElementsByTagName('input')[0].checked;
-                        const anotacoes = cells[2].getElementsByTagName('input')[0].value;
-                
-                        dados.push({
-                            cliente,
-                            finalizado,
-                            anotacoes
-                        });
-                    }
-                
-                    localStorage.setItem('clientes', JSON.stringify(dados));
-                    window.location.href = 'https://infinitycooperative.github.io/Cliente/';
-                }
-                
-            </script>
-            <h1>Gerenciamento de Clientes</h1>
-            <table id="clientesTable">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Finalizado</th>
-                        <th>Anotações</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <button onclick="adicionarCliente()">Adicionar Cliente</button>
-            <button onclick="salvarClientes()">Salvar</button>
-            <!--tabela-->
-        </div>
+  <h1>Gerenciar Clientes</h1>
+
+  <table id="clientesTable">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Finalizado</th>
+        <th>Anotações</th>
+        <th>Horário</th>
+        <th>Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Linhas de clientes serão adicionadas aqui -->
+    </tbody>
+  </table>
+
+  <button onclick="adicionarCliente()">Adicionar Cliente</button>
+  <br><br>
+  <button onclick="salvarDados()">Salvar e Verificar</button>
+
+  <script>
+    // Função para adicionar um novo cliente à tabela
+    function adicionarCliente() {
+      const table = document.getElementById('clientesTable').getElementsByTagName('tbody')[0];
+      const newRow = table.insertRow();
+      
+      const clienteCell = newRow.insertCell(0);
+      const checkboxCell = newRow.insertCell(1);
+      const anotacoesCell = newRow.insertCell(2);
+      const horarioCell = newRow.insertCell(3);
+      const actionCell = newRow.insertCell(4);
+
+      clienteCell.innerHTML = `<input type="text" placeholder="Nome do Cliente" />`;
+      checkboxCell.innerHTML = `<input type="checkbox" />`;
+      anotacoesCell.innerHTML = `<input type="text" placeholder="Anotações" />`;
+      horarioCell.innerHTML = `<input type="text" placeholder="HH:MM" />`;
+      actionCell.innerHTML = `<button onclick="removerCliente(this)">Remover</button>`;
+
+      // Atualizar o horário automaticamente
+      const horarioInput = horarioCell.getElementsByTagName('input')[0];
+      horarioInput.value = new Date().toLocaleTimeString();
+    }
+
+    // Função para remover um cliente da tabela
+    function removerCliente(button) {
+      const row = button.parentElement.parentElement;
+      row.remove();
+    }
+
+    // Função para salvar os dados e redirecionar para outra página
+    function salvarDados() {
+      const tableRows = document.getElementById('clientesTable').getElementsByTagName('tbody')[0].rows;
+      const clientesData = [];
+
+      for (let row of tableRows) {
+        const cliente = row.cells[0].getElementsByTagName('input')[0].value;
+        const finalizado = row.cells[1].getElementsByTagName('input')[0].checked;
+        const anotacoes = row.cells[2].getElementsByTagName('input')[0].value;
+        const horario = row.cells[3].getElementsByTagName('input')[0].value;
+
+        clientesData.push({ cliente, finalizado, anotacoes, horario });
+      }
+
+      // Armazenar os dados no localStorage
+      localStorage.setItem('clientesData', JSON.stringify(clientesData));
+
+      // Redirecionar para a página de exibição
+      window.location.href = 'https://infinitycooperative.github.io/Poseidon/';
+    }
+  </script>
         
 </body>
 </html>
